@@ -23,7 +23,7 @@ const app = Vue.createApp({
                 width: `${this.playerHealth}%`
             }
         },
-        specialAttackAvailable(){
+        disableSpecialAttack(){
             return this.currentRound % 3 !== 0;            
         }
     },
