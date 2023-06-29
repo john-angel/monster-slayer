@@ -6,7 +6,10 @@ const app = Vue.createApp({
             minPlayerDamage: 8,
             maxPlayerDamage: 15,
             minMonsterDamage: 5,
-            maxMonsterDamage: 12
+            maxMonsterDamage: 12,
+            minMonsterSpecialDamage: 10,
+            maxMonsterSpecialDamage: 25,
+            currentRound: 0
         }
     },
     computed: {
@@ -19,6 +22,9 @@ const app = Vue.createApp({
             return {
                 width: `${this.playerHealth}%`
             }
+        },
+        specialAttackAvailable(){
+            return this.currentRound % 3 !== 0;            
         }
     },
     methods: {        
@@ -26,6 +32,7 @@ const app = Vue.createApp({
             const attackValue = this.getAttackValue(this.minMonsterDamage, this.maxMonsterDamage);
             this.monsterHealth-= attackValue;
             this.attackPlayer();
+            this.currentRound++;
         },
         attackPlayer(){
             const attackValue = this.getAttackValue(this.minPlayerDamage, this.maxPlayerDamage);
@@ -33,6 +40,12 @@ const app = Vue.createApp({
         },
         getAttackValue(minDamage, maxDamage){
             return Math.floor(Math.random() * (maxDamage - minDamage)) + minDamage;
+        },
+        specialAttackMonster(){            
+            const attackValue = this.getAttackValue(this.minMonsterSpecialDamage, this.maxMonsterSpecialDamage);
+            this.monsterHealth-= attackValue;
+            this.attackPlayer();
+            this.currentRound++;
         }
     }
 })
