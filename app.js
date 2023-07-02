@@ -4,7 +4,7 @@ const app = Vue.createApp({
             playerHealth: 100,
             monsterHealth: 100,
             minPlayerDamage: 8,
-            maxPlayerDamage: 15,
+            maxPlayerDamage: 15,            
             minMonsterDamage: 5,
             maxMonsterDamage: 12,
             minMonsterSpecialDamage: 10,
@@ -29,22 +29,33 @@ const app = Vue.createApp({
     },
     methods: {        
         attackMonster(){            
-            const attackValue = this.getAttackValue(this.minMonsterDamage, this.maxMonsterDamage);
+            const attackValue = this.getRandomValue(this.minMonsterDamage, this.maxMonsterDamage);
             this.monsterHealth-= attackValue;
             this.attackPlayer();
             this.currentRound++;
         },
         attackPlayer(){
-            const attackValue = this.getAttackValue(this.minPlayerDamage, this.maxPlayerDamage);
+            const attackValue = this.getRandomValue(this.minPlayerDamage, this.maxPlayerDamage);
             this.playerHealth-= attackValue;
         },
-        getAttackValue(minDamage, maxDamage){
-            return Math.floor(Math.random() * (maxDamage - minDamage)) + minDamage;
+        getRandomValue(minValue, maxValue){
+            return Math.floor(Math.random() * (maxValue - minValue)) + minValue;
         },
         specialAttackMonster(){            
-            const attackValue = this.getAttackValue(this.minMonsterSpecialDamage, this.maxMonsterSpecialDamage);
+            const attackValue = this.getRandomValue(this.minMonsterSpecialDamage, this.maxMonsterSpecialDamage);
             this.monsterHealth-= attackValue;
             this.attackPlayer();
+            this.currentRound++;
+        },
+        healPlayer(){
+            const minPlayerHeal = 8;
+            const maxPlayerHeal = 15;
+            const healValue = this.getRandomValue(minPlayerHeal, maxPlayerHeal);
+            if(this.playerHealth + healValue < 100){
+                this.playerHealth+= healValue;
+            }else{
+                this.playerHealth = 100;
+            }
             this.currentRound++;
         }
     }
