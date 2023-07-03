@@ -25,6 +25,9 @@ const app = Vue.createApp({
         },
         disableSpecialAttack(){
             return this.currentRound % 3 !== 0;            
+        },
+        disableHeal(){
+            return this.currentRound % 2 !== 0;
         }
     },
     methods: {        
