@@ -4,7 +4,13 @@ const app = Vue.createApp({
             playerHealth: 100,
             monsterHealth: 100,            
             currentRound: 0,
-            winner: null            
+            winner: null,
+            log: [],
+            PLAYER: 'player',
+            MONSTER: 'monster',
+            DAMAGE: 'damage',            
+            HEAL: 'heal',
+            SURRENDER: 'surrender'
         }
     },
     watch: {
@@ -39,7 +45,7 @@ const app = Vue.createApp({
         },
         disableHeal(){
             return this.currentRound % 2 !== 0;
-        }        
+        },                
     },
     methods: {
         getRandomValue(minValue, maxValue){
@@ -50,20 +56,23 @@ const app = Vue.createApp({
             const maxDamage = 12;            
             const attackValue = this.getRandomValue(minDamage, maxDamage);
             this.monsterHealth-= attackValue;
+            this.addMessageToLog(this.PLAYER, { 'log--player': true }, 'attacked',  attackValue);
             this.attackPlayer();
-            this.currentRound++;
+            this.currentRound++;            
         },
         attackPlayer(){
             const minDamage = 8;
             const maxDamage = 15;
             const attackValue = this.getRandomValue(minDamage, maxDamage);
             this.playerHealth-= attackValue;
+            this.addMessageToLog(this.MONSTER, { 'log--monster': true }, 'attacked', attackValue);
         },        
         specialAttackMonster(){            
             const minDamage = 10;
             const maxDamage = 25;            
             const attackValue = this.getRandomValue(minDamage, maxDamage);
             this.monsterHealth-= attackValue;
+            this.addMessageToLog(this.PLAYER, { 'log--player': true }, 'sent special attack', attackValue);
             this.attackPlayer();
             this.currentRound++;
         },
@@ -76,6 +85,7 @@ const app = Vue.createApp({
             }else{
                 this.playerHealth = 100;
             }
+            this.addMessageToLog(this.PLAYER, { 'log--heal': true }, 'healt itself', healValue);
             this.currentRound++;
         },
         startAgain(){
@@ -83,9 +93,19 @@ const app = Vue.createApp({
             this.monsterHealth = 100;
             this.winner = null;
             this.currentRound = 0;
+            this.log = [];
         },
         surrender(){
             this.winner = 'You surrender... :-O';
+            this.addMessageToLog(this.PLAYER, { 'log--player': true }, this.SURRENDER);
+        },
+        addMessageToLog(actionBy, classType, description, value){
+            this.log.unshift({
+                actionBy,
+                classType,
+                description,
+                value
+            })
         }
     }
 })
