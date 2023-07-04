@@ -29,6 +29,10 @@
           <div class="healthbar__value" :style="playerBarStyle"></div>
         </div>
       </section>
+      <section class="container" v-if="winner">
+        <h2>Game Over!</h2>
+        <h3>{{ winner }}</h3>
+      </section>
       <section id="controls">
         <button @click='attackMonster'>ATTACK</button>
         <button @click='specialAttackMonster' :disabled="disableSpecialAttack">SPECIAL ATTACK</button>
@@ -37,7 +41,8 @@
       </section>
       <section id="log" class="container">
         <h2>Battle Log</h2>
-        <ul></ul>
+        <ul>                         
+        </ul>
       </section>
     </div>
   </body>

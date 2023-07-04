@@ -2,14 +2,25 @@ const app = Vue.createApp({
     data() {
         return {
             playerHealth: 100,
-            monsterHealth: 100,
-            minPlayerDamage: 8,
-            maxPlayerDamage: 15,            
-            minMonsterDamage: 5,
-            maxMonsterDamage: 12,
-            minMonsterSpecialDamage: 10,
-            maxMonsterSpecialDamage: 25,
-            currentRound: 0
+            monsterHealth: 100,            
+            currentRound: 0,
+            winner: null            
+        }
+    },
+    watch: {
+        playerHealth(value){
+            if(value <= 0){
+                this.winner = 'You lost :-( ...';
+            }else if(value <= 0 && this.monsterHealth <= 0){
+                this.winner = 'It\'s a draw';
+            }
+        },
+        monsterHealth(value){
+            if(value <= 0){
+                this.winner = 'You won :-) !';
+            }else if(value <= 0 && this.playerHealth <= 0){
+                this.winner = 'It\'s a draw';
+            }
         }
     },
     computed: {
@@ -28,24 +39,30 @@ const app = Vue.createApp({
         },
         disableHeal(){
             return this.currentRound % 2 !== 0;
-        }
+        }        
     },
-    methods: {        
+    methods: {
+        getRandomValue(minValue, maxValue){
+            return Math.floor(Math.random() * (maxValue - minValue)) + minValue;
+        },        
         attackMonster(){            
-            const attackValue = this.getRandomValue(this.minMonsterDamage, this.maxMonsterDamage);
+            const minDamage = 5;
+            const maxDamage = 12;            
+            const attackValue = this.getRandomValue(minDamage, maxDamage);
             this.monsterHealth-= attackValue;
             this.attackPlayer();
             this.currentRound++;
         },
         attackPlayer(){
-            const attackValue = this.getRandomValue(this.minPlayerDamage, this.maxPlayerDamage);
+            const minDamage = 8;
+            const maxDamage = 15;
+            const attackValue = this.getRandomValue(minDamage, maxDamage);
             this.playerHealth-= attackValue;
-        },
-        getRandomValue(minValue, maxValue){
-            return Math.floor(Math.random() * (maxValue - minValue)) + minValue;
-        },
+        },        
         specialAttackMonster(){            
-            const attackValue = this.getRandomValue(this.minMonsterSpecialDamage, this.maxMonsterSpecialDamage);
+            const minDamage = 10;
+            const maxDamage = 25;            
+            const attackValue = this.getRandomValue(minDamage, maxDamage);
             this.monsterHealth-= attackValue;
             this.attackPlayer();
             this.currentRound++;
